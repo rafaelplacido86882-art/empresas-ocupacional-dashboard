@@ -32,72 +32,62 @@ interface EvolucionOdontogramaProps {
 const getEstiloAccion = (codigo: string) => {
   switch (codigo) {
     case "0":
-      return { 
-        color: '#4caf50', 
-        bgColor: '#e8f5e8', 
+      return {
+        color: '#4caf50',
         icon: <CircleIcon sx={{ fontSize: 16 }} />,
         label: 'Sano'
       };
     case "1":
-      return { 
-        color: '#f44336', 
-        bgColor: '#ffebee', 
+      return {
+        color: '#f44336',
         icon: <WarningIcon sx={{ fontSize: 16 }} />,
         label: 'Caries'
       };
     case "2":
-      return { 
-        color: '#2196f3', 
-        bgColor: '#e3f2fd', 
+      return {
+        color: '#2196f3',
         icon: <BuildIcon sx={{ fontSize: 16 }} />,
         label: 'Obturación'
       };
     case "3":
-      return { 
-        color: '#757575', 
-        bgColor: '#f5f5f5', 
+      return {
+        color: '#757575',
         icon: <CloseIcon sx={{ fontSize: 16 }} />,
         label: 'Ausente'
       };
     case "4":
-      return { 
-        color: '#ff9800', 
-        bgColor: '#fff3e0', 
+      return {
+        color: '#ff9800',
         icon: <StarIcon sx={{ fontSize: 16 }} />,
         label: 'Corona'
       };
     case "5":
-      return { 
-        color: '#9c27b0', 
-        bgColor: '#f3e5f5', 
+      return {
+        color: '#9c27b0',
         icon: <MedicalIcon sx={{ fontSize: 16 }} />,
         label: 'Endodoncia'
       };
     case "6":
-      return { 
-        color: '#607d8b', 
-        bgColor: '#eceff1', 
+      return {
+        color: '#607d8b',
         icon: <BuildIcon sx={{ fontSize: 16 }} />,
         label: 'Implante'
       };
     case "7":
-      return { 
-        color: '#795548', 
-        bgColor: '#efebe9', 
+      return {
+        color: '#795548',
         icon: <BuildIcon sx={{ fontSize: 16 }} />,
         label: 'Prótesis'
       };
     case "8":
-      return { 
-        color: '#e91e63', 
-        bgColor: '#fce4ec', 
+      return {
+        color: '#e91e63',
         icon: <WarningIcon sx={{ fontSize: 16 }} />,
         label: 'Fractura'
       };
     default:
-      return { 
-        color: '#9e9e9e', 
-        bgColor: '#fafafa', 
+      return {
+        color: '#9e9e9e',
         icon: <CircleIcon sx={{ fontSize: 16 }} />,
         label: 'Otro'
       };
@@ -107,9 +97,9 @@ const getEstiloAccion = (codigo: string) => {
 const PiezaDentalComponent = ({ pieza, acciones }: { pieza: number, acciones: AccionDental[] }) => {
   const accion = acciones[0];
   const estilo = getEstiloAccion(accion.codigo);
-  
+
   return (
-    <Tooltip 
+    <Tooltip
       title={`Pieza ${pieza}: ${accion.tipo}`}
       placement="top"
     >
@@ -122,7 +112,6 @@ const PiezaDentalComponent = ({ pieza, acciones }: { pieza: number, acciones: Ac
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          bgcolor: estilo.bgColor,
           border: `2px solid ${estilo.color}`,
           borderRadius: 2,
           cursor: 'pointer',
@@ -147,9 +136,9 @@ const PiezaDentalComponent = ({ pieza, acciones }: { pieza: number, acciones: Ac
 export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProps) {
   const theme = useTheme();
   const [añoSeleccionado, setAñoSeleccionado] = useState(datos.años[datos.años.length - 1]?.año || 2025);
-  
+
   const odontogramaActual = datos.años.find(año => año.año === añoSeleccionado);
-  
+
   const organizarPorCuadrantes = (odontograma: PiezaDental[]) => {
     const cuadrantes = {
       superiorDerecho: [] as PiezaDental[], // 11-18
@@ -207,7 +196,7 @@ export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProp
           <Typography variant="h6" component="h2">
             Evolución del Odontograma
           </Typography>
-          
+
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Button
               variant="outlined"
@@ -218,11 +207,11 @@ export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProp
             >
               Anterior
             </Button>
-            
+
             <Typography variant="h6" sx={{ minWidth: 60, textAlign: 'center', fontWeight: 700 }}>
               {añoSeleccionado}
             </Typography>
-            
+
             <Button
               variant="outlined"
               size="small"
@@ -236,13 +225,12 @@ export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProp
         </Box>
 
         <Grid container spacing={3}>
-          <Grid size={{ xs: 12, lg: 8 }}>
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
+          <Grid size={{ xs: 12, lg: 12 }}>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               p: 3,
-              bgcolor: 'background.default',
               borderRadius: 2,
               border: `1px solid ${theme.palette.divider}`
             }}>
@@ -256,9 +244,9 @@ export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProp
                     />
                   ))}
                 </Box>
-                
+
                 <Box sx={{ width: 20 }} />
-                
+
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   {cuadrantes.superiorIzquierdo.map((pieza) => (
                     <PiezaDentalComponent
@@ -270,11 +258,11 @@ export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProp
                 </Box>
               </Box>
 
-              <Box sx={{ 
-                width: '100%', 
-                height: 2, 
-                bgcolor: theme.palette.divider, 
-                my: 2 
+              <Box sx={{
+                width: '100%',
+                height: 2,
+                bgcolor: theme.palette.divider,
+                my: 2
               }} />
 
               <Box sx={{ display: 'flex', gap: 1 }}>
@@ -287,9 +275,9 @@ export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProp
                     />
                   ))}
                 </Box>
-                
+
                 <Box sx={{ width: 20 }} />
-                
+
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   {cuadrantes.inferiorIzquierdo.map((pieza) => (
                     <PiezaDentalComponent
@@ -303,7 +291,7 @@ export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProp
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 12, lg: 4 }}>
+          <Grid size={{ xs: 12, lg: 12 }}>
             <Stack spacing={3}>
               <Box>
                 <Typography variant="subtitle2" gutterBottom>
@@ -321,7 +309,6 @@ export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProp
                           justifyContent: 'space-between',
                           p: 1,
                           borderRadius: 1,
-                          bgcolor: estilo.bgColor,
                           border: `1px solid ${estilo.color}`,
                         }}
                       >
@@ -336,8 +323,8 @@ export default function EvolucionOdontograma({ datos }: EvolucionOdontogramaProp
                         <Chip
                           label={cantidad}
                           size="small"
-                          sx={{ 
-                            bgcolor: estilo.color, 
+                          sx={{
+                            bgcolor: estilo.color,
                             color: 'white',
                             fontWeight: 600
                           }}
