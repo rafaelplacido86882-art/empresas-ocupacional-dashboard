@@ -1,43 +1,36 @@
-import { Grid, Typography, Box } from '@mui/material';
+import { Grid, Box } from '@mui/material';
+import { espirometriaMockData } from '../../../mock/espirometria.mock';
 import {
-    AptitudLaboralRestricciones,
-    EvolucionEspirometricaTemporal,
-    ExposicionesLaboralesRespiratorias,
-    IndicadoresSaludRespiratoria,
-    ParametrosEspirometricosActuales
+    ValoresEspirometricosEvolucion,
+    DiagnosticosEspirometriaTabla,
+    FactoresRiesgoAntecedentes,
+    DatosFisicosEvolucion,
+    ComparativoEspirometrico
 } from './espirometria/index';
 
 export default function Espirometria() {
 
     return (
         <Box>
-            <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                Evaluación Cardiológica Ocupacional
-            </Typography>
-
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Evaluación cardiovascular integral para determinar aptitud laboral y riesgos ocupacionales
-            </Typography>
-
             <Grid container spacing={3}>
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <AptitudLaboralRestricciones />
-                </Grid>
-
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <EvolucionEspirometricaTemporal />
+                <Grid size={{ xs: 12 }}>
+                    <ValoresEspirometricosEvolucion datos={espirometriaMockData} />
                 </Grid>
 
                 <Grid size={{ xs: 12 }}>
-                    <ExposicionesLaboralesRespiratorias />
+                    <ComparativoEspirometrico datos={espirometriaMockData} />
                 </Grid>
 
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <IndicadoresSaludRespiratoria />
+                <Grid size={{ xs: 12 }}>
+                    <DatosFisicosEvolucion datos={espirometriaMockData} />
                 </Grid>
 
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <ParametrosEspirometricosActuales />
+                <Grid size={{ xs: 12 }}>
+                    <FactoresRiesgoAntecedentes datos={espirometriaMockData} />
+                </Grid>
+
+                <Grid size={{ xs: 12 }}>
+                    <DiagnosticosEspirometriaTabla datos={espirometriaMockData} />
                 </Grid>
             </Grid>
         </Box>
