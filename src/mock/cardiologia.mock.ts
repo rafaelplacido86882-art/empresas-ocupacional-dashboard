@@ -1,0 +1,257 @@
+export const cardiologiaMockData = [
+  {
+    evaluacion_ocupacional_cardiologia: {
+      cardiologia: [
+        {
+          fecha_evaluacion: "2024-01-15",
+          antecedentes: {
+            soplos: false,
+            cansancio_rapido: true,
+            diabetes: false,
+            presion_alta: true,
+            mareos: false,
+            dislipidemias: true,
+            dolor_precordial: false,
+            palpitaciones: true,
+            varices_mmii: false,
+            imas: false,
+            perdida_conciencia: false,
+            obesidad: true,
+            tabaquismo: true,
+            otros: "Antecedente familiar de cardiopatía isquémica",
+          },
+          sintomas: {
+            asintomatico: false,
+            lipotimias: false,
+            claudicacion_intermitente: false,
+            dolor_precordial: true,
+            dnp: false,
+            palpitaciones: true,
+            mareos: false,
+            otros: "Dolor torácico ocasional con esfuerzo moderado",
+          },
+          examen_fisico: {
+            presion_arterial: {
+              sistolica: 145,
+              diastolica: 95,
+              unidad: "mmHg",
+            },
+            frecuencia_cardiaca: {
+              valor: 88,
+              unidad: "lat/min",
+            },
+            examen_corazon:
+              "Ruidos cardíacos rítmicos, no soplos audibles. S1 y S2 normales.",
+            otros_hallazgos: "Ligero sobrepeso, IMC: 28.5. No edemas en MMII.",
+          },
+          ecg: {
+            fc: {
+              valor: 85,
+              unidad: "x/min",
+            },
+            ritmo: "Sinusal regular",
+            intervalo_pr: {
+              valor: 160,
+              unidad: "ms",
+              interpretacion: "Normal",
+            },
+            intervalo_qrs: {
+              valor: 90,
+              unidad: "ms",
+              interpretacion: "Normal",
+            },
+            intervalo_qt: {
+              valor: 420,
+              unidad: "ms",
+              interpretacion: "Normal",
+            },
+            onda_p: "Normal en todas las derivaciones",
+            onda_q: "Ausente patológica",
+            onda_r: "Adecuada progresión en precordiales",
+            onda_s: "Normal",
+            onda_t: "Positiva en todas las derivaciones excepto aVR",
+            onda_u: "No evidente",
+            segmento_st: "Isoelectrico",
+            eje_qrs: "Normal (entre 0° y +90°)",
+          },
+          aptitud_trabajo_forzado: "Apto con Restricciones",
+          aptitud_trabajo_altura: "Apto con Restricciones",
+          diagnosticos: [
+            {
+              cie10: "M54.5",
+              conclusion: "LUMBALGIA",
+              recomendaciones: "FISIOTERAPIA Y CONTROL EN 6 MESES",
+            },
+          ],
+        },
+        {
+          fecha_evaluacion: "2025-01-22",
+          antecedentes: {
+            soplos: false,
+            cansancio_rapido: false,
+            diabetes: false,
+            presion_alta: false,
+            mareos: false,
+            dislipidemias: false,
+            dolor_precordial: false,
+            palpitaciones: false,
+            varices_mmii: false,
+            imas: false,
+            perdida_conciencia: false,
+            obesidad: false,
+            tabaquismo: false,
+            otros: "Ninguno relevante",
+          },
+          sintomas: {
+            asintomatico: true,
+            lipotimias: false,
+            claudicacion_intermitente: false,
+            dolor_precordial: false,
+            dnp: false,
+            palpitaciones: false,
+            mareos: false,
+            otros: "Ninguno",
+          },
+          examen_fisico: {
+            presion_arterial: {
+              sistolica: 115,
+              diastolica: 75,
+              unidad: "mmHg",
+            },
+            frecuencia_cardiaca: {
+              valor: 72,
+              unidad: "lat/min",
+            },
+            examen_corazon:
+              "Ruidos cardíacos rítmicos y de buena intensidad. No soplos.",
+            otros_hallazgos:
+              "Paciente en buen estado general. IMC: 22.1. Sin alteraciones significativas.",
+          },
+          ecg: {
+            fc: {
+              valor: 70,
+              unidad: "x/min",
+            },
+            ritmo: "Sinusal regular",
+            intervalo_pr: {
+              valor: 140,
+              unidad: "ms",
+              interpretacion: "Normal",
+            },
+            intervalo_qrs: {
+              valor: 85,
+              unidad: "ms",
+              interpretacion: "Normal",
+            },
+            intervalo_qt: {
+              valor: 400,
+              unidad: "ms",
+              interpretacion: "Normal",
+            },
+            onda_p: "Normal",
+            onda_q: "Fisiológica en DII, DIII, aVF",
+            onda_r: "Progresión normal en precordiales",
+            onda_s: "Normal",
+            onda_t: "Positiva, simétrica",
+            onda_u: "No visible",
+            segmento_st: "Isoelectrico",
+            eje_qrs: "Normal (+60°)",
+          },
+          aptitud_trabajo_forzado: "Apto con Restricciones",
+          aptitud_trabajo_altura: "Apto con Restricciones",
+          diagnosticos: [
+            {
+              cie10: "M54.5",
+              conclusion: "LUMBALGIA",
+              recomendaciones: "FISIOTERAPIA Y CONTROL EN 6 MESES",
+            },
+          ],
+        },
+        {
+          fecha_evaluacion: "2023-03-05",
+          antecedentes: {
+            soplos: false,
+            cansancio_rapido: false,
+            diabetes: false,
+            presion_alta: false,
+            mareos: false,
+            dislipidemias: false,
+            dolor_precordial: false,
+            palpitaciones: true,
+            varices_mmii: false,
+            imas: false,
+            perdida_conciencia: false,
+            obesidad: false,
+            tabaquismo: true,
+            otros: "Fumador 1 cajetilla/día desde hace 15 años",
+          },
+          sintomas: {
+            asintomatico: false,
+            lipotimias: false,
+            claudicacion_intermitente: false,
+            dolor_precordial: false,
+            dnp: false,
+            palpitaciones: true,
+            mareos: false,
+            otros:
+              "Palpitaciones ocasionales, especialmente en reposo nocturno",
+          },
+          examen_fisico: {
+            presion_arterial: {
+              sistolica: 125,
+              diastolica: 80,
+              unidad: "mmHg",
+            },
+            frecuencia_cardiaca: {
+              valor: 78,
+              unidad: "lat/min",
+            },
+            examen_corazon:
+              "Ruidos cardíacos rítmicos. Ocasionales latidos irregulares durante la auscultación.",
+            otros_hallazgos:
+              "Estado nutricional normal. No alteraciones significativas.",
+          },
+          ecg: {
+            fc: {
+              valor: 75,
+              unidad: "x/min",
+            },
+            ritmo: "Sinusal con extrasístoles auriculares frecuentes",
+            intervalo_pr: {
+              valor: 150,
+              unidad: "ms",
+              interpretacion: "Normal",
+            },
+            intervalo_qrs: {
+              valor: 88,
+              unidad: "ms",
+              interpretacion: "Normal",
+            },
+            intervalo_qt: {
+              valor: 410,
+              unidad: "ms",
+              interpretacion: "Normal",
+            },
+            onda_p: "Normal, algunas prematuras",
+            onda_q: "Normal",
+            onda_r: "Normal",
+            onda_s: "Normal",
+            onda_t: "Normal",
+            onda_u: "No evidente",
+            segmento_st: "Isoelectrico",
+            eje_qrs: "Normal (+45°)",
+          },
+          aptitud_trabajo_forzado: "Apto con Restricciones",
+          aptitud_trabajo_altura: "Apto con Restricciones",
+          diagnosticos: [
+            {
+              cie10: "M54.5",
+              conclusion: "LUMBALGIA",
+              recomendaciones: "FISIOTERAPIA Y CONTROL EN 6 MESES",
+            },
+          ],
+        },
+      ],
+    },
+  },
+];

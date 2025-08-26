@@ -1,34 +1,40 @@
 import { Grid, Box } from '@mui/material';
+import { cardiologiaMockData } from '../../../mock/cardiologia.mock';
 import {
-    PresionArterialYRiesgoCardiovascular,
-    ElectrocardiogramaYRitmo,
-    PruebaEsfuerzoYCapacidadFisica,
-    EvolucionCardiovascular,
-    AptitudLaboralYRestricciones
+    PresionArterialEvolucion,
+    DiagnosticosCardiologiaTabla,
+    AntecedentesCardiovasculares,
+    ElectrocardiogramaEvolucion,
+    SintomasExamenFisico,
+    ResumenCardiovascular
 } from './cardiologia/index';
 
 export default function Cardiologia() {
     return (
         <Box>
             <Grid container spacing={3}>
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <PresionArterialYRiesgoCardiovascular />
+                <Grid size={{ xs: 12 }}>
+                    <ResumenCardiovascular datos={cardiologiaMockData} />
                 </Grid>
 
                 <Grid size={{ xs: 12, lg: 6 }}>
-                    <ElectrocardiogramaYRitmo />
+                    <PresionArterialEvolucion datos={cardiologiaMockData} />
+                </Grid>
+
+                <Grid size={{ xs: 12, lg: 6 }}>
+                    <ElectrocardiogramaEvolucion datos={cardiologiaMockData} />
                 </Grid>
 
                 <Grid size={{ xs: 12 }}>
-                    <PruebaEsfuerzoYCapacidadFisica />
+                    <AntecedentesCardiovasculares datos={cardiologiaMockData} />
                 </Grid>
 
                 <Grid size={{ xs: 12, lg: 6 }}>
-                    <EvolucionCardiovascular />
+                    <SintomasExamenFisico datos={cardiologiaMockData} />
                 </Grid>
 
                 <Grid size={{ xs: 12, lg: 6 }}>
-                    <AptitudLaboralYRestricciones />
+                    <DiagnosticosCardiologiaTabla datos={cardiologiaMockData} />
                 </Grid>
             </Grid>
         </Box>
