@@ -1,5 +1,4 @@
-export { default as TriajeEvolucion } from './TriajeEvolucion';
-export { default as DiagnosticosPorCategoria } from './DiagnosticosPorCategoria';
-export { default as ConsultasMedicasAnuales } from './ConsultasMedicasAnuales';
-export { default as IndicadoresFichaMedica } from './IndicadoresFichaMedica';
-export { default as HistorialMedicoReciente } from './HistorialMedicoReciente';
+export { default as SignosVitales } from './SignosVitales';
+export { default as Antropometria } from './Antropometria';
+export { default as ExamenFisico } from './ExamenFisico';
+export { default as DiagnosticosAptitud } from './DiagnosticosAptitud';

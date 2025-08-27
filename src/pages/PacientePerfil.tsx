@@ -41,7 +41,6 @@ export default function PacientePerfil() {
     const [selectedSection, setSelectedSection] = useState(0);
 
     const sections = [
-        { id: 0, label: 'Dashboard', color: 'primary' },
         { id: 1, label: 'Interconsulta', color: 'secondary' },
         { id: 2, label: 'Ficha Médica', color: 'success' },
         { id: 3, label: 'Antecedentes', color: 'info' },

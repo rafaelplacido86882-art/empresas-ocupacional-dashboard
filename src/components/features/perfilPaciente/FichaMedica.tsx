@@ -1,48 +1,38 @@
-import { Box, Typography, Grid, Paper } from '@mui/material';
-import {
-    TriajeEvolucion,
-    DiagnosticosPorCategoria,
-    ConsultasMedicasAnuales,
-    IndicadoresFichaMedica,
-    HistorialMedicoReciente
-} from './fichaMedica/index';
+import React from 'react';
+import { Box, Grid, Stack } from '@mui/material';
+import { SignosVitales, Antropometria, ExamenFisico, DiagnosticosAptitud } from './fichaMedica/index';
+import { fichaMedicaMockData } from '../../../mock/fichaMedica.mock';
 
-export default function FichaMedica() {
+const FichaMedica: React.FC = () => {
     return (
-        <Box sx={{ width: '100%', p: 2 }}>
-            <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                Ficha Médica Ocupacional
-            </Typography>
-
-            <Box sx={{ mb: 3 }}>
-                <IndicadoresFichaMedica />
-            </Box>
-
-            <Grid container spacing={3}>
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <Paper sx={{ p: 0, height: 400 }}>
-                        <TriajeEvolucion />
-                    </Paper>
+        <Box >
+            <Stack spacing={4}>
+                <Grid container spacing={3}>
+                    <Grid size={12}>
+                        <SignosVitales data={fichaMedicaMockData} />
+                    </Grid>
                 </Grid>
 
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <Paper sx={{ p: 0, height: 400 }}>
-                        <DiagnosticosPorCategoria />
-                    </Paper>
+                <Grid container spacing={3}>
+                    <Grid size={12}>
+                        <Antropometria data={fichaMedicaMockData} />
+                    </Grid>
                 </Grid>
 
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <Paper sx={{ p: 0, height: 400 }}>
-                        <ConsultasMedicasAnuales />
-                    </Paper>
+                <Grid container spacing={3}>
+                    <Grid size={12}>
+                        <ExamenFisico data={fichaMedicaMockData} />
+                    </Grid>
                 </Grid>
 
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <Paper sx={{ p: 0, height: 400 }}>
-                        <HistorialMedicoReciente />
-                    </Paper>
+                <Grid container spacing={3}>
+                    <Grid size={12}>
+                        <DiagnosticosAptitud data={fichaMedicaMockData} />
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Stack>
         </Box>
     );
-}
+};
+
+export default FichaMedica;

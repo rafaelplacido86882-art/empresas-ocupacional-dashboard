@@ -1,44 +1,58 @@
-import { Card, CardContent, Typography, Box, Grid, Chip, LinearProgress } from '@mui/material';
+import React from 'react';
+import { Card, CardContent, Typography, Box, Grid, Chip, Stack, Divider } from '@mui/material';
+import { BarChart } from '@mui/x-charts/BarChart';
 import { PieChart } from '@mui/x-charts/PieChart';
+import { useTheme } from '@mui/material/styles';
+import type { Antecedente } from '../../../../mock/antecedentes.mock';
 
-const datosFamiliaresMujeresData = [
-    { label: 'Sin datos reproductivos', value: 35, color: '#e0e0e0' },
-    { label: 'Con embarazos', value: 45, color: '#4caf50' },
-    { label: 'Sin embarazos', value: 20, color: '#2196f3' },
-];
+interface AntecedentesReproductivosYFamiliaresProps {
+    data: Antecedente[];
+}
 
-const metodosAnticonceptivosData = [
-    { metodo: 'Píldoras', porcentaje: 35, tipo: 'Hormonal' },
-    { metodo: 'DIU', porcentaje: 25, tipo: 'Dispositivo' },
-    { metodo: 'Preservativo', porcentaje: 20, tipo: 'Barrera' },
-    { metodo: 'Natural', porcentaje: 10, tipo: 'Natural' },
-    { metodo: 'Ninguno', porcentaje: 10, tipo: 'Ninguno' },
-];
+const AntecedentesReproductivosYFamiliares: React.FC<AntecedentesReproductivosYFamiliaresProps> = ({ data }) => {
+    const theme = useTheme();
+    const ultimaEvaluacion = data[data.length - 1];
+    
+    const familiaresPorParentesco = ultimaEvaluacion.antecedentes_familiares.reduce((acc, familiar) => {
+        acc[familiar.parentesco] = (acc[familiar.parentesco] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
 
-const riesgosFamiliaresData = [
-    { riesgo: 'Diabetes Familiar', prevalencia: 30 },
-    { riesgo: 'Hipertensión Familiar', prevalencia: 45 },
-    { riesgo: 'Cáncer Familiar', prevalencia: 15 },
-    { riesgo: 'Cardiopatías', prevalencia: 25 },
-    { riesgo: 'Enf. Mentales', prevalencia: 20 },
-];
+    const familiaresData = Object.entries(familiaresPorParentesco).map(([parentesco, cantidad], index) => ({
+        id: index,
+        value: cantidad,
+        label: parentesco,
+        color: [
+            theme.palette.primary.main,
+            theme.palette.secondary.main,
+            theme.palette.warning.main,
+            theme.palette.error.main,
+            theme.palette.success.main,
+            theme.palette.info.main
+        ][index % 6]
+    }));
 
-export default function AntecedentesReproductivosYFamiliares() {
-    const getColorByPercentage = (value: number) => {
-        if (value <= 15) return 'success';
-        if (value <= 30) return 'warning';
-        return 'error';
+    const patologiasFamiliares = data.map(evaluacion => {
+        const patologias = evaluacion.antecedentes_familiares.reduce((acc, familiar) => {
+            acc[familiar.patologia] = (acc[familiar.patologia] || 0) + 1;
+            return acc;
+        }, {} as Record<string, number>);
+        
+        return {
+            año: new Date(evaluacion.fecha_evaluacion).getFullYear(),
+            diabetes: patologias['Diabetes tipo 2'] || 0,
+            hipertension: patologias['Hipertensión arterial'] || 0,
+            cardiaco: patologias['Infarto al miocardio'] || 0,
+            tiroides: patologias['Hipotiroidismo'] || 0
+        };
+    });
+
+    const getEstadoColor = (estado: string): 'success' | 'error' => {
+        return estado === 'vivo' ? 'success' : 'error';
     };
 
-    const getMethodColor = (metodo: string) => {
-        switch (metodo) {
-            case 'Píldoras': return 'primary';
-            case 'DIU': return 'secondary';
-            case 'Preservativo': return 'info';
-            case 'Natural': return 'success';
-            case 'Ninguno': return 'warning';
-            default: return 'default';
-        }
+    const getTerapiaColor = (terapia: boolean): 'primary' | 'default' => {
+        return terapia ? 'primary' : 'default';
     };
 
     return (
@@ -49,87 +63,184 @@ export default function AntecedentesReproductivosYFamiliares() {
                 </Typography>
 
                 <Grid container spacing={3}>
-                    <Grid size={5}>
+                    <Grid size={6}>
                         <Typography variant="subtitle2" gutterBottom>
-                            Datos Reproductivos (Mujeres)
+                            Distribución de Antecedentes Familiares
                         </Typography>
-                        <Box sx={{ height: 200, display: 'flex', justifyContent: 'center' }}>
+                        <Box sx={{ height: 200, width: '100%' }}>
                             <PieChart
                                 series={[{
-                                    data: datosFamiliaresMujeresData,
+                                    data: familiaresData,
+                                    highlightScope: { fade: 'global', highlight: 'item' },
                                     innerRadius: 30,
-                                    outerRadius: 80,
-                                    paddingAngle: 2,
-                                    cornerRadius: 3,
+                                    outerRadius: 80
                                 }]}
-                                width={200}
                                 height={200}
-                                margin={{ top: 10, bottom: 10, left: 10, right: 10 }}
                             />
                         </Box>
                     </Grid>
 
-                    <Grid size={7}>
+                    <Grid size={6}>
                         <Typography variant="subtitle2" gutterBottom>
-                            Métodos Anticonceptivos y Riesgos Familiares
+                            Evolución de Patologías Familiares
                         </Typography>
-
-                        <Box sx={{ mb: 2 }}>
-                            <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium' }}>
-                                Métodos Anticonceptivos:
-                            </Typography>
-                            <Grid container spacing={1}>
-                                {metodosAnticonceptivosData.map((item, index) => (
-                                    <Grid key={index} size={6}>
-                                        <Chip
-                                            label={`${item.metodo}: ${item.porcentaje}%`}
-                                            color={getMethodColor(item.metodo)}
-                                            size="small"
-                                            sx={{
-                                                width: '100%',
-                                                '& .MuiChip-label': { fontSize: '0.7rem' }
-                                            }}
-                                        />
-                                    </Grid>
-                                ))}
-                            </Grid>
-                        </Box>
-
-                        <Box>
-                            <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium' }}>
-                                Antecedentes Familiares:
-                            </Typography>
-                            {riesgosFamiliaresData.map((item, index) => (
-                                <Box key={index} sx={{ mb: 1.5 }}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                                        <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>
-                                            {item.riesgo}
-                                        </Typography>
-                                        <Chip
-                                            label={`${item.prevalencia}%`}
-                                            color={getColorByPercentage(item.prevalencia)}
-                                            size="small"
-                                        />
-                                    </Box>
-                                    <LinearProgress
-                                        variant="determinate"
-                                        value={item.prevalencia * 2}
-                                        color={getColorByPercentage(item.prevalencia)}
-                                        sx={{ height: 6, borderRadius: 1 }}
-                                    />
-                                </Box>
-                            ))}
+                        <Box sx={{ height: 200, width: '100%' }}>
+                            <BarChart
+                                series={[
+                                    {
+                                        data: patologiasFamiliares.map(p => p.diabetes),
+                                        label: 'Diabetes',
+                                        color: theme.palette.error.main
+                                    },
+                                    {
+                                        data: patologiasFamiliares.map(p => p.hipertension),
+                                        label: 'Hipertensión',
+                                        color: theme.palette.warning.main
+                                    },
+                                    {
+                                        data: patologiasFamiliares.map(p => p.cardiaco),
+                                        label: 'Cardíaco',
+                                        color: theme.palette.error.dark
+                                    },
+                                    {
+                                        data: patologiasFamiliares.map(p => p.tiroides),
+                                        label: 'Tiroides',
+                                        color: theme.palette.info.main
+                                    }
+                                ]}
+                                xAxis={[{
+                                    data: patologiasFamiliares.map(p => p.año.toString()),
+                                    scaleType: 'band'
+                                }]}
+                                height={200}
+                            />
                         </Box>
                     </Grid>
                 </Grid>
 
-                <Box sx={{ mt: 2, p: 1, bgcolor: 'grey.50', borderRadius: 1 }}>
-                    <Typography variant="caption" color="text.secondary">
-                        📊 Datos reproductivos aplicables solo a trabajadoras mujeres |
-                        👨‍👩‍👧‍👦 Antecedentes familiares declarados en exámenes médicos ocupacionales
+                <Divider sx={{ my: 3 }} />
+
+                {ultimaEvaluacion.antecedentes_reproductivos && (
+                    <Box sx={{ mb: 3 }}>
+                        <Typography variant="subtitle2" gutterBottom>
+                            Antecedentes Reproductivos
+                        </Typography>
+                        <Box sx={{ 
+                            p: 2, 
+                            border: `1px solid ${theme.palette.divider}`,
+                            borderRadius: 1,
+                            bgcolor: 'background.paper'
+                        }}>
+                            <Grid container spacing={2}>
+                                <Grid size={6}>
+                                    <Stack spacing={1}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Typography variant="body2">Menarquia:</Typography>
+                                            <Typography variant="body2" fontWeight="medium">
+                                                {ultimaEvaluacion.antecedentes_reproductivos.menarquia} años
+                                            </Typography>
+                                        </Box>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Typography variant="body2">Ciclos regulares:</Typography>
+                                            <Chip
+                                                label={ultimaEvaluacion.antecedentes_reproductivos.ciclos_regulares ? 'SÍ' : 'NO'}
+                                                color={ultimaEvaluacion.antecedentes_reproductivos.ciclos_regulares ? 'success' : 'warning'}
+                                                size="small"
+                                            />
+                                        </Box>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Typography variant="body2">Embarazos:</Typography>
+                                            <Typography variant="body2" fontWeight="medium">
+                                                {ultimaEvaluacion.antecedentes_reproductivos.embarazos}
+                                            </Typography>
+                                        </Box>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Typography variant="body2">Partos:</Typography>
+                                            <Typography variant="body2" fontWeight="medium">
+                                                {ultimaEvaluacion.antecedentes_reproductivos.partos}
+                                            </Typography>
+                                        </Box>
+                                    </Stack>
+                                </Grid>
+                                <Grid size={6}>
+                                    <Stack spacing={1}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Typography variant="body2">Abortos:</Typography>
+                                            <Typography variant="body2" fontWeight="medium">
+                                                {ultimaEvaluacion.antecedentes_reproductivos.abortos}
+                                            </Typography>
+                                        </Box>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Typography variant="body2">Cesáreas:</Typography>
+                                            <Typography variant="body2" fontWeight="medium">
+                                                {ultimaEvaluacion.antecedentes_reproductivos.cesareas}
+                                            </Typography>
+                                        </Box>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Typography variant="body2">Lactancia:</Typography>
+                                            <Chip
+                                                label={ultimaEvaluacion.antecedentes_reproductivos.lactancia ? 'SÍ' : 'NO'}
+                                                color={ultimaEvaluacion.antecedentes_reproductivos.lactancia ? 'success' : 'default'}
+                                                size="small"
+                                            />
+                                        </Box>
+                                        {ultimaEvaluacion.antecedentes_reproductivos.menopausia && (
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <Typography variant="body2">Menopausia:</Typography>
+                                                <Typography variant="body2" fontWeight="medium">
+                                                    {ultimaEvaluacion.antecedentes_reproductivos.menopausia} años
+                                                </Typography>
+                                            </Box>
+                                        )}
+                                        {ultimaEvaluacion.antecedentes_reproductivos.terapia_hormonal !== undefined && (
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <Typography variant="body2">Terapia hormonal:</Typography>
+                                                <Chip
+                                                    label={ultimaEvaluacion.antecedentes_reproductivos.terapia_hormonal ? 'SÍ' : 'NO'}
+                                                    color={getTerapiaColor(ultimaEvaluacion.antecedentes_reproductivos.terapia_hormonal) as any}
+                                                    size="small"
+                                                />
+                                            </Box>
+                                        )}
+                                    </Stack>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Box>
+                )}
+
+                <Box>
+                    <Typography variant="subtitle2" gutterBottom>
+                        Antecedentes Familiares
                     </Typography>
+                    <Stack spacing={1}>
+                        {ultimaEvaluacion.antecedentes_familiares.map((familiar, index) => (
+                            <Box key={index} sx={{ 
+                                p: 2, 
+                                border: `1px solid ${theme.palette.divider}`,
+                                borderRadius: 1,
+                                bgcolor: 'background.paper'
+                            }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                                    <Typography variant="body2" fontWeight="medium">
+                                        {familiar.parentesco} - {familiar.patologia}
+                                    </Typography>
+                                    <Chip
+                                        label={familiar.estado.toUpperCase()}
+                                        color={getEstadoColor(familiar.estado) as any}
+                                        size="small"
+                                    />
+                                </Box>
+                                <Typography variant="caption" color="text.secondary">
+                                    Edad al diagnóstico: {familiar.edad_diagnostico} años
+                                </Typography>
+                            </Box>
+                        ))}
+                    </Stack>
                 </Box>
             </CardContent>
         </Card>
     );
-}
+};
+
+export default AntecedentesReproductivosYFamiliares;

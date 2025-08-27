@@ -1,4 +1,4 @@
-import { Grid, Typography, Box } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import {
   FactoresRiesgoEvolucion,
   CondicionesDentalesEvolucion,
@@ -12,13 +12,7 @@ import { datosOdontogramaMock } from '../../../mock/odontograma.mock';
 
 export default function Odontologia() {
   return (
-    <Box sx={{ flexGrow: 1, p: 3 }}>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="caption" color="text.secondary">
-          Período: {mockDatosOdontologicos.años[0]?.año} - {mockDatosOdontologicos.años[mockDatosOdontologicos.años.length - 1]?.año}
-        </Typography>
-      </Box>
-
+    <Box sx={{ flexGrow: 1}}>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, lg: 12 }}>
           <FactoresRiesgoEvolucion datos={mockDatosOdontologicos} />

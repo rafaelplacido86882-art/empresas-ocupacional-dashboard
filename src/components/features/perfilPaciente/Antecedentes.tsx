@@ -1,42 +1,35 @@
-import { Grid, Typography, Box } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import {
     SegurosYHorarios,
     VacunasYAgentes,
     HabitosYPatologias,
-    HistoriaClinicaYRiesgos,
-    AntecedentesReproductivosYFamiliares
+    HistoriaClinicaYRiesgos
 } from './antecedentes/index';
+import AntecedentesReproductivosYFamiliares from './antecedentes/AntecedentesReproductivosYFamiliares';
+import { antecedentesMockData } from '../../../mock/antecedentes.mock';
 
 export default function Antecedentes() {
     return (
         <Box>
-            <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                Antecedentes del Trabajador
-            </Typography>
-
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Información declarada por el trabajador en exámenes médicos ocupacionales anuales
-            </Typography>
-
             <Grid container spacing={3}>
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <SegurosYHorarios />
+                <Grid size={{ xs: 12}}>
+                    <HabitosYPatologias data={antecedentesMockData} />
                 </Grid>
 
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <VacunasYAgentes />
-                </Grid>
-
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <HabitosYPatologias />
-                </Grid>
-
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <HistoriaClinicaYRiesgos />
+                <Grid size={{ xs: 12}}>
+                    <SegurosYHorarios data={antecedentesMockData} />
                 </Grid>
 
                 <Grid size={{ xs: 12 }}>
-                    <AntecedentesReproductivosYFamiliares />
+                    <VacunasYAgentes data={antecedentesMockData} />
+                </Grid>
+
+                <Grid size={{ xs: 12 }}>
+                    <HistoriaClinicaYRiesgos data={antecedentesMockData} />
+                </Grid>
+
+                <Grid size={{ xs: 12 }}>
+                    <AntecedentesReproductivosYFamiliares data={antecedentesMockData} />
                 </Grid>
             </Grid>
         </Box>

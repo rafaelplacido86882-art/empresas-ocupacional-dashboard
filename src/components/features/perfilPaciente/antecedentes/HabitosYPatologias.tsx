@@ -1,31 +1,33 @@
-import { Card, CardContent, Typography, Box, Grid, Chip } from '@mui/material';
+import React from 'react';
+import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { PieChart } from '@mui/x-charts/PieChart';
+import { useTheme } from '@mui/material/styles';
+import type { Antecedente } from '../../../../mock/antecedentes.mock';
 
-const habitosData = [
-    { habito: 'Tabaco', consume: 25, noConsume: 75, tipo: 'Cigarrillos' },
-    { habito: 'Alcohol', consume: 40, noConsume: 60, tipo: 'Social' },
-    { habito: 'Drogas', consume: 5, noConsume: 95, tipo: 'Recreativas' },
-    { habito: 'Medicamentos', consume: 65, noConsume: 35, tipo: 'Prescritos' },
-];
+interface HabitosYPatologiasProps {
+    data: Antecedente[];
+}
 
-const patologiasData = [
-    { categoria: 'Hipertensión', cantidad: 18 },
-    { categoria: 'Diabetes', cantidad: 12 },
-    { categoria: 'Asma', cantidad: 8 },
-    { categoria: 'Obesidad', cantidad: 22 },
-    { categoria: 'Otros', cantidad: 15 },
-];
-
-export default function HabitosYPatologias() {
-    const habitos = habitosData.map(item => item.habito);
-    const consumo = habitosData.map(item => item.consume);
-    const noConsumo = habitosData.map(item => item.noConsume);
-
-    const getColorByValue = (value: number) => {
-        if (value <= 10) return 'success';
-        if (value <= 30) return 'warning';
-        return 'error';
-    };
+const HabitosYPatologias: React.FC<HabitosYPatologiasProps> = ({ data }) => {
+    const theme = useTheme();
+    const ultimaEvaluacion = data[data.length - 1];
+    
+    const habitosEvolucion = data.map(evaluacion => ({
+        año: new Date(evaluacion.fecha_evaluacion).getFullYear(),
+        tabaco: evaluacion.habitos.find(h => h.tipo === 'Tabaco')?.consume ? 1 : 0,
+        alcohol: evaluacion.habitos.find(h => h.tipo === 'Alcohol')?.consume ? 1 : 0,
+        drogas: evaluacion.habitos.find(h => h.tipo === 'Drogas')?.consume ? 1 : 0
+    }));
+    
+    const patologiasActuales = ultimaEvaluacion.patologias.map((pat, index) => ({
+        id: index,
+        value: pat.estado === 'activo' ? 40 : pat.estado === 'controlado' ? 35 : 25,
+        label: pat.nombre,
+        color: pat.estado === 'activo' ? theme.palette.error.main : 
+               pat.estado === 'controlado' ? theme.palette.warning.main : 
+               theme.palette.success.main
+    }));
 
     return (
         <Card sx={{ height: '100%' }}>
@@ -35,74 +37,58 @@ export default function HabitosYPatologias() {
                 </Typography>
 
                 <Grid container spacing={3}>
-                    <Grid size={7}>
+                    <Grid size={6}>
                         <Typography variant="subtitle2" gutterBottom>
-                            Hábitos de Consumo (%)
+                            Evolución de Hábitos
                         </Typography>
-                        <Box sx={{ height: 200 }}>
+                        <Box sx={{ height: 200, width: '100%' }}>
                             <BarChart
-                                width={350}
-                                height={200}
                                 series={[
-                                    { data: consumo, label: 'Consume', color: '#f44336' },
-                                    { data: noConsumo, label: 'No consume', color: '#4caf50' },
+                                    {
+                                        data: habitosEvolucion.map(h => h.tabaco),
+                                        label: 'Tabaco',
+                                        color: theme.palette.error.main
+                                    },
+                                    {
+                                        data: habitosEvolucion.map(h => h.alcohol),
+                                        label: 'Alcohol',
+                                        color: theme.palette.warning.main
+                                    },
+                                    {
+                                        data: habitosEvolucion.map(h => h.drogas),
+                                        label: 'Drogas',
+                                        color: theme.palette.error.dark
+                                    }
                                 ]}
-                                xAxis={[{ data: habitos, scaleType: 'band' }]}
-                                margin={{ top: 10, bottom: 40, left: 40, right: 10 }}
+                                xAxis={[{
+                                    data: habitosEvolucion.map(h => h.año.toString()),
+                                    scaleType: 'band'
+                                }]}
+                                height={200}
                             />
                         </Box>
                     </Grid>
 
-                    <Grid size={5}>
+                    <Grid size={6}>
                         <Typography variant="subtitle2" gutterBottom>
-                            Patologías Declaradas
+                            Distribución de Patologías
                         </Typography>
-                        <Box sx={{ mt: 1 }}>
-                            {patologiasData.map((item, index) => (
-                                <Box key={index} sx={{ mb: 1.5 }}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                                        <Typography variant="body2">{item.categoria}</Typography>
-                                        <Chip
-                                            label={`${item.cantidad}%`}
-                                            color={getColorByValue(item.cantidad)}
-                                            size="small"
-                                        />
-                                    </Box>
-                                    <Box sx={{
-                                        width: '100%',
-                                        height: 6,
-                                        bgcolor: 'grey.200',
-                                        borderRadius: 1,
-                                        overflow: 'hidden'
-                                    }}>
-                                        <Box sx={{
-                                            width: `${item.cantidad * 4}%`,
-                                            height: '100%',
-                                            bgcolor: item.cantidad <= 10 ? 'success.main' : item.cantidad <= 20 ? 'warning.main' : 'error.main',
-                                            borderRadius: 1,
-                                        }} />
-                                    </Box>
-                                </Box>
-                            ))}
+                        <Box sx={{ height: 200, width: '100%' }}>
+                            <PieChart
+                                series={[{
+                                    data: patologiasActuales,
+                                    highlightScope: { fade: 'global', highlight: 'item' },
+                                    innerRadius: 30,
+                                    outerRadius: 80
+                                }]}
+                                height={200}
+                            />
                         </Box>
                     </Grid>
                 </Grid>
-
-                <Box sx={{ mt: 2 }}>
-                    <Grid container spacing={1}>
-                        {habitosData.map((item, index) => (
-                            <Grid key={index} size={3}>
-                                <Chip
-                                    label={`${item.habito}: ${item.tipo}`}
-                                    size="small"
-                                    color={item.consume > 30 ? 'error' : item.consume > 10 ? 'warning' : 'default'}
-                                    sx={{ width: '100%', '& .MuiChip-label': { fontSize: '0.7rem' } }}
-                                />
-                            </Grid>
-                        ))}
-                    </Grid>
-                </Box>
             </CardContent>
         </Card>
     );
-}
+};
+
+export default HabitosYPatologias;

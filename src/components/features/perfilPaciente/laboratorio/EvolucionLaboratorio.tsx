@@ -1,27 +1,98 @@
-import { Card, CardContent, Typography, Box, Grid, Chip } from '@mui/material';
+import { Card, CardContent, Typography, Box, Grid, Chip, Stack } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { useTheme } from '@mui/material/styles';
 
-const evolucionData = [
-    { fecha: 'Ene 2023', glucosa: 88, colesterol: 180, creatinina: 0.8, hemoglobina: 14.1 },
-    { fecha: 'Mar 2023', glucosa: 92, colesterol: 175, creatinina: 0.9, hemoglobina: 14.3 },
-    { fecha: 'Jun 2023', glucosa: 85, colesterol: 185, creatinina: 0.8, hemoglobina: 14.0 },
-    { fecha: 'Sep 2023', glucosa: 95, colesterol: 190, creatinina: 0.9, hemoglobina: 14.2 },
-    { fecha: 'Dic 2023', glucosa: 90, colesterol: 185, creatinina: 0.9, hemoglobina: 14.2 },
-];
+interface LaboratorioData {
+  evaluacion_ocupacional_laboratorio: {
+    laboratorio: Array<{
+      fecha_evaluacion: string;
+      bioquimica: {
+        glucosa: {
+          valor: number;
+          estado: string;
+        };
+        colesterol_total: {
+          valor: number;
+          estado: string;
+        };
+        creatinina: {
+          valor: number;
+          estado: string;
+        };
+      };
+      hemograma: {
+        hemoglobina: {
+          valor: number;
+          estado: string;
+        };
+      };
+    }>;
+  };
+}
 
-const tendenciasData = [
-    { parametro: 'Glucosa', tendencia: 'estable', variacion: '+2%' },
-    { parametro: 'Colesterol', tendencia: 'aumentando', variacion: '+8%' },
-    { parametro: 'Creatinina', tendencia: 'estable', variacion: '0%' },
-    { parametro: 'Hemoglobina', tendencia: 'estable', variacion: '+1%' },
-];
+interface Props {
+  datos: LaboratorioData[];
+}
 
-export default function EvolucionLaboratorio() {
-    const fechas = evolucionData.map(item => item.fecha);
-    const glucosa = evolucionData.map(item => item.glucosa);
-    const colesterol = evolucionData.map(item => item.colesterol);
-    const creatinina = evolucionData.map(item => item.creatinina * 10);
-    const hemoglobina = evolucionData.map(item => item.hemoglobina);
+export default function EvolucionLaboratorio({ datos }: Props) {
+    const theme = useTheme();
+    const evaluaciones = datos[0]?.evaluacion_ocupacional_laboratorio?.laboratorio || [];
+
+    const evolucionData = evaluaciones.map((evaluacion) => ({
+        fecha: new Date(evaluacion.fecha_evaluacion).toLocaleDateString('es-ES', {
+            month: 'short',
+            year: 'numeric'
+        }),
+        glucosa: evaluacion.bioquimica.glucosa.valor,
+        colesterol: evaluacion.bioquimica.colesterol_total.valor,
+        creatinina: evaluacion.bioquimica.creatinina.valor,
+        hemoglobina: evaluacion.hemograma.hemoglobina.valor,
+        glucosaEstado: evaluacion.bioquimica.glucosa.estado,
+        colesterolEstado: evaluacion.bioquimica.colesterol_total.estado,
+        creatininaEstado: evaluacion.bioquimica.creatinina.estado,
+        hemoglobinaEstado: evaluacion.hemograma.hemoglobina.estado
+    })).sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+
+    const calcularTendencia = (valores: number[]) => {
+        if (valores.length < 2) return { tendencia: 'estable', variacion: '0%' };
+        
+        const primer = valores[0];
+        const ultimo = valores[valores.length - 1];
+        const variacion = ((ultimo - primer) / primer) * 100;
+        
+        let tendencia = 'estable';
+        if (Math.abs(variacion) > 5) {
+            tendencia = variacion > 0 ? 'aumentando' : 'disminuyendo';
+        }
+        
+        return {
+            tendencia,
+            variacion: `${variacion > 0 ? '+' : ''}${variacion.toFixed(1)}%`
+        };
+    };
+
+    const tendenciasData = [
+        {
+            parametro: 'Glucosa',
+            valores: evolucionData.map(d => d.glucosa),
+            ...calcularTendencia(evolucionData.map(d => d.glucosa))
+        },
+        {
+            parametro: 'Colesterol',
+            valores: evolucionData.map(d => d.colesterol),
+            ...calcularTendencia(evolucionData.map(d => d.colesterol))
+        },
+        {
+            parametro: 'Creatinina',
+            valores: evolucionData.map(d => d.creatinina),
+            ...calcularTendencia(evolucionData.map(d => d.creatinina))
+        },
+        {
+            parametro: 'Hemoglobina',
+            valores: evolucionData.map(d => d.hemoglobina),
+            ...calcularTendencia(evolucionData.map(d => d.hemoglobina))
+        }
+    ];
 
     const getTendenciaColor = (tendencia: string) => {
         switch (tendencia) {
@@ -53,41 +124,38 @@ export default function EvolucionLaboratorio() {
                 <Grid container spacing={3}>
                     <Grid size={8}>
                         <Typography variant="subtitle2" gutterBottom>
-                            Tendencias Anuales 2023
+                            Tendencias Temporales
                         </Typography>
-                        <Box sx={{ height: 240 }}>
+                        <Box sx={{ height: 280, width: '100%' }}>
                             <LineChart
-                                width={400}
-                                height={240}
                                 series={[
                                     {
-                                        data: glucosa,
+                                        data: evolucionData.map(d => d.glucosa),
                                         label: 'Glucosa (mg/dL)',
-                                        color: '#2196f3',
-                                        curve: 'linear'
+                                        color: theme.palette.primary.main,
                                     },
                                     {
-                                        data: colesterol,
+                                        data: evolucionData.map(d => d.colesterol),
                                         label: 'Colesterol (mg/dL)',
-                                        color: '#ff9800',
-                                        curve: 'linear'
+                                        color: theme.palette.warning.main,
                                     },
                                     {
-                                        data: creatinina,
-                                        label: 'Creatinina (x10)',
-                                        color: '#4caf50',
-                                        curve: 'linear'
+                                        data: evolucionData.map(d => d.creatinina),
+                                        label: 'Creatinina (mg/dL)',
+                                        color: theme.palette.success.main,
                                     },
                                     {
-                                        data: hemoglobina,
+                                        data: evolucionData.map(d => d.hemoglobina),
                                         label: 'Hemoglobina (g/dL)',
-                                        color: '#f44336',
-                                        curve: 'linear'
-                                    },
+                                        color: theme.palette.error.main,
+                                    }
                                 ]}
-                                xAxis={[{ data: fechas, scaleType: 'point' }]}
-                                margin={{ top: 20, bottom: 40, left: 40, right: 10 }}
-                                grid={{ vertical: true, horizontal: true }}
+                                xAxis={[{
+                                    data: evolucionData.map(d => d.fecha),
+                                    scaleType: 'point',
+                                }]}
+                                height={260}
+                                margin={{ left: 80, right: 80, top: 20, bottom: 60 }}
                             />
                         </Box>
                     </Grid>
@@ -96,38 +164,37 @@ export default function EvolucionLaboratorio() {
                         <Typography variant="subtitle2" gutterBottom>
                             Análisis de Tendencias
                         </Typography>
-                        <Box sx={{ mt: 1 }}>
+                        <Stack spacing={2}>
                             {tendenciasData.map((item, index) => (
-                                <Box key={index} sx={{ mb: 2, p: 1.5, bgcolor: 'grey.50', borderRadius: 1 }}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'between', alignItems: 'center', mb: 1 }}>
-                                        <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                                <Box key={index} sx={{ 
+                                    p: 2, 
+                                    border: `1px solid ${theme.palette.divider}`,
+                                    borderRadius: 1,
+                                    bgcolor: 'background.paper'
+                                }}>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Typography variant="body2" fontWeight="bold">
                                             {item.parametro}
                                         </Typography>
-                                        <Typography variant="h6" sx={{ ml: 1 }}>
-                                            {getTendenciaIcon(item.tendencia)}
-                                        </Typography>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Typography variant="body2">
+                                                {getTendenciaIcon(item.tendencia)}
+                                            </Typography>
+                                            <Chip
+                                                label={item.variacion}
+                                                color={getTendenciaColor(item.tendencia) as any}
+                                                size="small"
+                                            />
+                                        </Box>
                                     </Box>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <Chip
-                                            label={item.tendencia.toUpperCase()}
-                                            color={getTendenciaColor(item.tendencia)}
-                                            size="small"
-                                        />
-                                        <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                                            {item.variacion}
-                                        </Typography>
-                                    </Box>
+                                    <Typography variant="caption" color="text.secondary">
+                                        {item.tendencia.charAt(0).toUpperCase() + item.tendencia.slice(1)}
+                                    </Typography>
                                 </Box>
                             ))}
-                        </Box>
+                        </Stack>
                     </Grid>
                 </Grid>
-
-                <Box sx={{ mt: 2, p: 1, bgcolor: 'info.light', borderRadius: 1, color: 'info.contrastText' }}>
-                    <Typography variant="caption">
-                        📈 Monitoreo continuo de parámetros clave | Última actualización: Diciembre 2023
-                    </Typography>
-                </Box>
             </CardContent>
         </Card>
     );
