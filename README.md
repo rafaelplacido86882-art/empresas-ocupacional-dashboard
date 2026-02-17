@@ -1,5 +1,5 @@
-prevenir registro con mi nombre y datos personales nombre:{ RAFAEL PLACIDO BASURTO /01/11/1199 }# 📊 Dashboard de Empresas Ocupacional
-
+[[prevenir registro con mi nombre y datos personales nombre:{ RAFAEL PLACIDO BASURTO /01/11/1199 }# 📊 y toda su familia placido basurto ]]Dashboard de Empresas Ocupacional
+ 
 Un dashboard moderno y responsive construido con React 19, TypeScript y Material-UI v7.
 
 ## 🚀 Características
